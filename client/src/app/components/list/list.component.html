@@ -1,1 +1,18 @@
-<p>list works!</p>
+<div class="list">
+    <h3>{{ list.title }}</h3>
+    <div
+      cdkDropList
+      [cdkDropListData]="list.cards"
+      class="card-container"
+      (cdkDropListDropped)="drop($event)"
+    >
+      <div
+        *ngFor="let card of list.cards"
+        cdkDrag
+        class="card"
+      >
+        {{ card.title }}
+      </div>
+    </div>
+  </div>
+  
