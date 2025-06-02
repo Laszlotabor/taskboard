@@ -41,7 +41,15 @@
       <div class="d-flex flex-row flex-nowrap overflow-auto gap-3 pb-3">
         <div *ngFor="let list of lists" class="card p-2" style="min-width: 250px;">
           <div class="card-body">
-            <h5 class="card-title">{{ list.title }}</h5>
+            <div *ngIf="!editingListId || editingListId !== list._id" (click)="startEditing(list)">
+                <h5 class="card-title">{{ list.title }}</h5>
+              </div>
+              <div *ngIf="editingListId === list._id">
+                <input [(ngModel)]="list.title" class="form-control mb-2" (keyup.enter)="saveList(list)" />
+                <button class="btn btn-sm btn-success me-2" (click)="saveList(list)">Save</button>
+                <button class="btn btn-sm btn-secondary" (click)="cancelEditing()">Cancel</button>
+              </div>
+              
           </div>
         </div>
   

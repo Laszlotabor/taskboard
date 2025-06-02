@@ -3,6 +3,8 @@ import { BoardsService, Board } from '../../services/board-service.service';
 import { ListService} from '../../services/listservice.service';
 import { CommonModule } from '@angular/common';
 import { List } from '../../services/listservice.service';
+import { FormsModule } from '@angular/forms';
+
 
 
 
@@ -11,7 +13,7 @@ import { List } from '../../services/listservice.service';
 @Component({
   selector: 'app-board-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './boards.component.html',
   styleUrls: ['./boards.component.css'],
 })
@@ -22,6 +24,7 @@ export class BoardListComponent {
   selectedBoardId: string = '';
   selectedListId: string = '';
   lists: List[] = [];
+  editingListId: string | null = null;
 
   constructor(
     private boardsService: BoardsService,
@@ -79,6 +82,25 @@ export class BoardListComponent {
       },
       error: (err) => {
         console.error('Failed to create list', err);
+      },
+    });
+  }
+  startEditing(list: List): void {
+    this.editingListId = list._id ?? null; // Use null if _id is undefined
+  }
+
+  cancelEditing(): void {
+    this.editingListId = null;
+  }
+
+  saveList(list: List): void {
+    this.listService.updateList(list._id!, { title: list.title }).subscribe({
+      next: (updated) => {
+        this.editingListId = null;
+        // Optionally, refresh lists again
+      },
+      error: (err) => {
+        console.error('Failed to update list', err);
       },
     });
   }

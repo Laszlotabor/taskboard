@@ -26,4 +26,7 @@ export class ListService {
   getLists(boardId: string): Observable<List[]> {
     return this.http.get<List[]>(`${this.baseUrl}/board/${boardId}`);
   }
+  updateList(id: string, updates: Partial<List>): Observable<List> {
+    return this.http.put<List>(`${this.baseUrl}/${id}`, updates);
+  }
 }
