@@ -1,47 +1,63 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Card } from '../../models/card';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
-
-
+import { FormsModule } from '@angular/forms';
+import { Card } from '../../models/card';
+import { CardService } from '../../services/card-service.service';
 
 @Component({
   selector: 'app-card',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css'],
-  standalone: true,
-  imports: [FormsModule, CommonModule],
 })
 export class CardComponent {
   @Input() card!: Card;
-  @Output() update = new EventEmitter<Card>();
-  @Output() delete = new EventEmitter<string>();
+  @Output() cardDeleted = new EventEmitter<string>(); // Emit deleted card id
 
-  editing = false;
+  isEditing = false;
   showModal = false;
-
   editedTitle: string = '';
   editedDescription: string = '';
 
-  openModal(): void {
-    this.editedTitle = this.card.title || '';
-    this.editedDescription = this.card.description || ''; // <-- Fixes the error
+  constructor(private cardService: CardService) {}
+
+  openModal() {
+    this.editedTitle = this.card.title;
+    this.editedDescription = this.card.description ?? '';
     this.showModal = true;
   }
 
-  closeModal(): void {
+  closeModal() {
     this.showModal = false;
   }
 
-  saveChanges(): void {
-    this.card.title = this.editedTitle;
-    this.card.description = this.editedDescription;
-    this.update.emit(this.card);
-    this.closeModal();
+  saveChanges() {
+    const updates = {
+      title: this.editedTitle,
+      description: this.editedDescription,
+    };
+
+    this.cardService.updateCard(this.card._id!, updates).subscribe({
+      next: (updatedCard) => {
+        this.card.title = updatedCard.title;
+        this.card.description = updatedCard.description;
+        this.closeModal();
+      },
+      error: (err) => console.error('Failed to update card:', err),
+    });
   }
 
-  deleteCard(): void {
-    this.delete.emit(this.card._id!);
-    this.closeModal();
+  deleteCard() {
+    if (!this.card._id) return;
+
+    this.cardService.deleteCard(this.card._id).subscribe({
+      next: () => {
+        this.cardDeleted.emit(this.card._id!); // Notify parent
+        this.closeModal();
+      },
+      error: (err) => console.error('Failed to delete card:', err),
+    });
   }
 }

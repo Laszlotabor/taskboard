@@ -53,9 +53,12 @@
   
             <!-- Render Cards -->
 <!-- Inside each list card-body -->
-<div *ngFor="let card of list.cards">
-    <app-card [card]="card"></app-card>
-  </div>
+<app-card
+  *ngFor="let card of list.cards"
+  [card]="card"
+  (cardDeleted)="onCardDeleted($event, list)">
+</app-card>
+
   
 
   

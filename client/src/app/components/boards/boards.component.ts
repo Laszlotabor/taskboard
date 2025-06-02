@@ -179,4 +179,9 @@ export class BoardListComponent {
       error: (err) => console.error('Failed to delete card', err),
     });
   }
+  onCardDeleted(cardId: string, list: List): void {
+    if (list.cards) {
+      list.cards = list.cards.filter((card: Card) => card._id !== cardId);
+    }
+  }
 }
