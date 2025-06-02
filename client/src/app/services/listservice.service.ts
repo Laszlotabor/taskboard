@@ -2,21 +2,28 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { List } from '../models/list'; // adjust path if needed
+export interface List {
+createdAt: string|number|Date;
+  _id?: string;
+  board: string;
+  title: string;
+  position: number;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ListService {
-  private apiUrl = 'http://localhost:5000/api/lists'; // Your backend API endpoint for lists
+  private baseUrl = 'http://localhost:5000/api/lists';
 
   constructor(private http: HttpClient) {}
 
-  getLists(boardId: string): Observable<List[]> {
-    return this.http.get<List[]>(`${this.apiUrl}/${boardId}`);
+  createList(list: Partial<List>): Observable<List> {
+    return this.http.post<List>(this.baseUrl, list);
   }
-  // Add this method:
-  createList(boardId: string, title: string): Observable<List> {
-    return this.http.post<List>(`${this.apiUrl}`, { board: boardId, title });
+
+  // This is the method you're using in BoardListComponent
+  getLists(boardId: string): Observable<List[]> {
+    return this.http.get<List[]>(`${this.baseUrl}/board/${boardId}`);
   }
 }

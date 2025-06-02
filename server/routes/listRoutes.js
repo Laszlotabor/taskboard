@@ -10,10 +10,13 @@ const {
 
 router.use(protect);
 
-router.route("/:boardId").get(getLists);
+// ✅ More specific path to avoid conflict
+router.get("/board/:boardId", getLists);
 
-router.route("/").post(createList);
+// ✅ List creation
+router.post("/", createList);
 
+// ✅ Update or delete specific list
 router.route("/:id").put(updateList).delete(deleteList);
 
 module.exports = router;

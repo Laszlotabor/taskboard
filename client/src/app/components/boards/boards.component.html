@@ -17,32 +17,38 @@
     <!-- Boards -->
     <div class="row row-cols-1 row-cols-md-3 g-4" *ngIf="boards.length > 0">
       <div class="col" *ngFor="let board of boards">
-        <div class="card h-100 shadow" (click)="selectBoard(board._id)">
-          <div class="card-body">
+        <div class="card h-100 shadow">
+          <div class="card-body" (click)="selectBoard(board._id)">
             <h5 class="card-title">{{ board.title }}</h5>
             <p class="card-text">{{ board.description }}</p>
           </div>
-          <div class="card-footer text-muted">
-            Created: {{ board.createdAt | date: 'mediumDate' }}
+          <div class="card-footer d-flex justify-content-between align-items-center">
+            <small class="text-muted">Created: {{ board.createdAt | date: 'mediumDate' }}</small>
+            <button class="btn btn-sm btn-outline-success" (click)="createList(board._id)">
+              + Add List
+            </button>
+
           </div>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Lists and Cards (after a board is selected) -->
-    <div *ngIf="selectedBoardId && lists.length > 0" class="mt-4">
-      <h3>Lists in Selected Board</h3>
-      <div class="row">
-        <div class="col-md-4" *ngFor="let list of lists">
-          <div class="card mb-3">
-            <div class="card-body">
-              <h5 class="card-title">{{ list.title }}</h5>
-            </div>
+   <!-- Lists under selected board -->
+<div *ngIf="selectedBoardId && lists.length > 0" class="mt-4">
+    <h3>Lists in Selected Board</h3>
+    <div class="row">
+      <div class="col-md-4" *ngFor="let list of lists">
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ list.title }}</h5>
+            <p class="card-text">Position: {{ list.position }}</p>
+            <p class="text-muted small">Created: {{ list.createdAt | date: 'short' }}</p>
           </div>
-  
-   
         </div>
       </div>
     </div>
   </div>
+  
+
+        </div>
+      </div>
+    </div>
+  
+
   
