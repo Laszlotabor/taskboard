@@ -1,0 +1,43 @@
+<div class="container mt-4">
+    <h2>Create a New Board</h2>
+  
+    <form (ngSubmit)="createBoard()" #boardForm="ngForm" novalidate>
+      <div class="mb-3">
+        <label for="title" class="form-label">Title<span class="text-danger">*</span></label>
+        <input
+          type="text"
+          id="title"
+          class="form-control"
+          required
+          [(ngModel)]="title"
+          name="title"
+          #titleInput="ngModel"
+        />
+        <div class="text-danger" *ngIf="titleInput.invalid && titleInput.touched">
+          Title is required.
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          id="description"
+          class="form-control"
+          rows="3"
+          [(ngModel)]="description"
+          name="description"
+        ></textarea>
+      </div>
+  
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="loading || boardForm.invalid"
+      >
+        {{ loading ? 'Creating...' : 'Create Board' }}
+      </button>
+    </form>
+  </div>
+  

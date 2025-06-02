@@ -1,0 +1,48 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Your Boards</h2>
+  
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+  
+    <!-- Error Message -->
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  
+    <!-- No Boards Message -->
+    <div *ngIf="!loading && boards.length === 0" class="alert alert-info">
+      You have no boards yet.
+    </div>
+  
+    <!-- Boards -->
+    <div class="row row-cols-1 row-cols-md-3 g-4" *ngIf="boards.length > 0">
+      <div class="col" *ngFor="let board of boards">
+        <div class="card h-100 shadow" (click)="selectBoard(board._id)">
+          <div class="card-body">
+            <h5 class="card-title">{{ board.title }}</h5>
+            <p class="card-text">{{ board.description }}</p>
+          </div>
+          <div class="card-footer text-muted">
+            Created: {{ board.createdAt | date: 'mediumDate' }}
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Lists and Cards (after a board is selected) -->
+    <div *ngIf="selectedBoardId && lists.length > 0" class="mt-4">
+      <h3>Lists in Selected Board</h3>
+      <div class="row">
+        <div class="col-md-4" *ngFor="let list of lists">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">{{ list.title }}</h5>
+            </div>
+          </div>
+  
+   
+        </div>
+      </div>
+    </div>
+  </div>
+  

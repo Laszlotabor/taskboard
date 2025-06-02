@@ -29,7 +29,8 @@ interface LoginResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/api/users'; // Make sure this matches your backend
+  private apiUrl = 'http://localhost:5000/api/auth';
+ // Make sure this matches your backend
 
   constructor(private http: HttpClient, private router: Router) {}
 
