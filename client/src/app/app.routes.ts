@@ -1,10 +1,17 @@
 import { Routes } from '@angular/router';
-import { BoardComponent } from './components/board/board.component';
-import { CardComponent } from './components/card/card.component';
-import { ListComponent } from './components/list/list.component';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
+
 
 export const routes: Routes = [
-  { path: 'board', component: BoardComponent },
-  { path: 'card', component: CardComponent },
-  { path: 'list', component: ListComponent }
+  { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+
+  // Redirect empty path to login
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  // Wildcard route to catch unknown URLs and redirect to login
+  { path: '**', redirectTo: 'login' },
 ];
+

@@ -1,13 +1,13 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { BoardComponent } from './components/board/board.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { provideAnimations } from '@angular/platform-browser/animations';
+
+import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter([{ path: '', component: BoardComponent }]),
-    importProvidersFrom(DragDropModule),
-    provideAnimations(),
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideHttpClient(), // <-- this is crucial
   ],
 };
