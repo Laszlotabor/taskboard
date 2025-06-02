@@ -1,5 +1,4 @@
 <div class="container mt-4">
-
     <!-- Board Selection View -->
     <div *ngIf="!selectedBoardId">
       <h2 class="mb-4">Your Boards</h2>
@@ -37,23 +36,43 @@
         <button class="btn btn-outline-secondary btn-sm" (click)="selectedBoardId = ''">← Back to Boards</button>
       </div>
   
-      <!-- Horizontal List Display (Trello style) -->
+      <!-- Horizontal Lists Display -->
       <div class="d-flex flex-row flex-nowrap overflow-auto gap-3 pb-3">
         <div *ngFor="let list of lists" class="card p-2" style="min-width: 250px;">
-          <div class="card-body">
+          <div class="card-body d-flex flex-column">
+            <!-- List Title or Editing -->
             <div *ngIf="!editingListId || editingListId !== list._id" (click)="startEditing(list)">
-                <h5 class="card-title">{{ list.title }}</h5>
-              </div>
-              <div *ngIf="editingListId === list._id">
-                <input [(ngModel)]="list.title" class="form-control mb-2" (keyup.enter)="saveList(list)" />
-                <button class="btn btn-sm btn-success me-2" (click)="saveList(list)">Save</button>
-                <button class="btn btn-sm btn-secondary" (click)="cancelEditing()">Cancel</button>
-              </div>
-              
+              <h5 style="background-color: pink;" class="card-title">{{ list.title }}</h5>
+            </div>
+            <div *ngIf="editingListId === list._id">
+              <input [(ngModel)]="list.title" class="form-control mb-2" (keyup.enter)="saveList(list)" />
+              <button class="btn btn-sm btn-success me-2" (click)="saveList(list)">Save</button>
+              <button class="btn btn-sm btn-secondary me-2" (click)="cancelEditing()">Cancel</button>
+              <button class="btn btn-sm btn-danger" (click)="deleteList(list._id)">Delete</button>
+            </div>
+  
+            <!-- Render Cards -->
+<!-- Inside each list card-body -->
+<div *ngFor="let card of list.cards">
+    <app-card [card]="card"></app-card>
+  </div>
+  
+
+  
+  
+  
+            <!-- Add Card Button -->
+            <button
+              class="btn btn-outline-success btn-sm mt-auto"
+              *ngIf="list._id"
+              (click)="addCard(list._id!)"
+            >
+              + Add Card
+            </button>
           </div>
         </div>
   
-        <!-- Add New List Button -->
+        <!-- Add New List -->
         <div class="card p-2" style="min-width: 250px;">
           <div class="card-body d-flex align-items-center justify-content-center">
             <button class="btn btn-outline-primary" (click)="createList(selectedBoardId)">+ Add List</button>
@@ -61,6 +80,5 @@
         </div>
       </div>
     </div>
-  
   </div>
   

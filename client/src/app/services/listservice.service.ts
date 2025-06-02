@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface List {
+  cards: any;
 createdAt: string|number|Date;
   _id?: string;
   board: string;
@@ -28,5 +29,9 @@ export class ListService {
   }
   updateList(id: string, updates: Partial<List>): Observable<List> {
     return this.http.put<List>(`${this.baseUrl}/${id}`, updates);
+  }
+  // listservice.service.ts
+  deleteList(listId: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${listId}`);
   }
 }

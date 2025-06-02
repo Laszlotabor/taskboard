@@ -1,8 +1,10 @@
+
+import { Card } from "./card";
 export interface List {
-  _id: string;
-  board: string;
+  _id?: string;
   title: string;
-  description?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  board?: string;
+  position: number;
+  cards?: Card[]; // 👈 Add this if not already present
 }
+  
