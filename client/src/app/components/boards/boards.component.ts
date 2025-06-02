@@ -50,6 +50,9 @@ export class BoardListComponent {
     this.selectedListId = '';
     this.fetchLists(boardId);
   }
+  getSelectedBoard(): Board | undefined {
+    return this.boards.find((b) => b._id === this.selectedBoardId);
+  }
 
   fetchLists(boardId: string): void {
     this.listService.getLists(boardId).subscribe({
@@ -64,22 +67,18 @@ export class BoardListComponent {
   }
 
   createList(boardId: string): void {
-    const title = prompt('Enter list title:');
-    if (!title || !title.trim()) return;
-
     const newList = {
-      board: boardId,
-      title: title.trim(),
+      title: 'New List',
       position: this.lists.length,
+      board: boardId,
     };
 
     this.listService.createList(newList).subscribe({
-      next: (list) => {
-        this.lists.push(list);
+      next: (createdList) => {
+        this.lists.push(createdList);
       },
       error: (err) => {
         console.error('Failed to create list', err);
-        alert('Error creating list');
       },
     });
   }
