@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
     <!-- Board Selection View -->
     <div *ngIf="!selectedBoardId">
       <h2 class="mb-4">Your Boards</h2>
@@ -20,9 +20,18 @@
             <div class="card-body">
               <h5 class="card-title">{{ board.title }}</h5>
               <p class="card-text">{{ board.description }}</p>
-              <button class="btn btn-primary btn-sm mt-2" (click)="selectBoard(board._id)">
-                View Board
-              </button>
+              <div class="d-flex flex-wrap gap-2 mt-3">
+                <button class="btn btn-primary btn-sm" (click)="selectBoard(board._id)">
+                  📋 View
+                </button>
+                <button class="btn btn-warning btn-sm" (click)="updateBoard(board._id)">
+                  ✏️ Edit
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="deleteBoard(board._id)">
+                  🗑 Delete
+                </button>
+              </div>
+              
             </div>
           </div>
         </div>
@@ -35,10 +44,10 @@
       <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
         <h2 class="board-title mb-2 mb-md-0">{{ getSelectedBoard()?.title }}</h2>
         <div class="d-flex gap-2">
-          <button class="btn btn-outline-primary btn-sm" (click)="createList(selectedBoardId)">
+          <button class="btn btn-success btn-sm" (click)="createList(selectedBoardId)">
             + Add List
           </button>
-          <button class="btn btn-outline-secondary btn-sm" (click)="selectedBoardId = ''">
+          <button class="btn btn-warning btn-sm" (click)="selectedBoardId = ''">
             ← Back to Boards
           </button>
         </div>
@@ -55,9 +64,11 @@
   
             <div *ngIf="editingListId === list._id">
               <input [(ngModel)]="list.title" class="form-control mb-2" (keyup.enter)="saveList(list)" />
-              <button class="btn btn-sm btn-success me-2" (click)="saveList(list)">Save</button>
-              <button class="btn btn-sm btn-secondary me-2" (click)="cancelEditing()">Cancel</button>
-              <button class="btn btn-sm btn-danger" (click)="deleteList(list._id)">Delete</button>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-success" (click)="saveList(list)">Save</button>
+                <button class="btn btn-sm btn-secondary" (click)="cancelEditing()">Cancel</button>
+                <button class="btn btn-sm btn-danger" (click)="deleteList(list._id)">Delete</button>
+              </div>
             </div>
   
             <!-- Cards List with Drop Support -->

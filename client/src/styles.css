@@ -4,3 +4,26 @@ body {
     font-weight: 500;
     font-style: normal;
 }
+.custom-navbar {
+    background-color: #0d47a1 !important;
+    /* Dark blue background */
+}
+
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link {
+    color: #fff !important;
+    /* White text */
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .navbar-brand:hover {
+    color: #bbdefb !important;
+    /* Light blue on hover */
+}
+
+.custom-navbar .nav-link.active {
+    color: #ffeb3b !important;
+    /* Yellow for active */
+}

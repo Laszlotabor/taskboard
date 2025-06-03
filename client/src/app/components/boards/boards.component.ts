@@ -48,8 +48,6 @@ export class BoardListComponent {
       .filter((id): id is string => typeof id === 'string');
   }
 
-  
-
   fetchBoards(): void {
     this.loading = true;
     this.boardsService.getBoards().subscribe({
@@ -73,6 +71,63 @@ export class BoardListComponent {
 
   getSelectedBoard(): Board | undefined {
     return this.boards.find((b) => b._id === this.selectedBoardId);
+  }
+
+  deleteBoard(boardId: string): void {
+    if (!boardId) return;
+
+    if (confirm('Are you sure you want to delete this board?')) {
+      this.boardsService.deleteBoard(boardId).subscribe({
+        next: () => {
+          this.boards = this.boards.filter((b) => b._id !== boardId);
+
+          // Reset selected board if it was deleted
+          if (this.selectedBoardId === boardId) {
+            this.selectedBoardId = '';
+            this.lists = [];
+            this.cards = {};
+          }
+        },
+        error: (err) => {
+          console.error('Failed to delete board', err);
+          this.error = 'Failed to delete board';
+        },
+      });
+    }
+  }
+  updateBoard(boardId: string): void {
+    const board = this.boards.find((b) => b._id === boardId);
+    if (!board) return;
+
+    const newTitle = prompt('Enter new board title:', board.title);
+    if (newTitle === null || newTitle.trim() === '') return;
+
+    const newDescription =
+      prompt('Enter new description:', board.description || '') || '';
+
+    this.boardsService
+      .updateBoard(boardId, {
+        title: newTitle.trim(),
+        description: newDescription.trim(),
+      })
+      .subscribe({
+        next: (updatedBoard) => {
+          // Update the board in local list
+          const index = this.boards.findIndex((b) => b._id === boardId);
+          if (index !== -1) {
+            this.boards[index] = updatedBoard;
+          }
+
+          // Update selected board title if needed
+          if (this.selectedBoardId === boardId) {
+            this.selectBoard(boardId); // Re-fetch lists/cards if needed
+          }
+        },
+        error: (err) => {
+          console.error('Failed to update board', err);
+          this.error = 'Failed to update board';
+        },
+      });
   }
 
   fetchLists(boardId: string): void {
