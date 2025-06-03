@@ -1,0 +1,21 @@
+.create-board-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #f8f9fa;
+}
+
+.create-board-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.create-board-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}

@@ -48,6 +48,8 @@ export class BoardListComponent {
       .filter((id): id is string => typeof id === 'string');
   }
 
+  
+
   fetchBoards(): void {
     this.loading = true;
     this.boardsService.getBoards().subscribe({
@@ -201,28 +203,33 @@ export class BoardListComponent {
     const previousListId = event.previousContainer.id;
     const currentListId = event.container.id;
 
+    // Ensure target list has a cards array
+    if (!targetList.cards) {
+      targetList.cards = [];
+    }
+
     if (event.previousContainer === event.container) {
-      // Move within same list
+      // Move card inside the same list
       moveItemInArray(
-        targetList.cards!,
+        targetList.cards,
         event.previousIndex,
         event.currentIndex
       );
     } else {
       const sourceList = this.lists.find((l) => l._id === previousListId);
-      if (!sourceList) return;
+      if (!sourceList || !sourceList.cards) return;
 
       transferArrayItem(
-        sourceList.cards!,
-        targetList.cards!,
+        sourceList.cards,
+        targetList.cards,
         event.previousIndex,
         event.currentIndex
       );
 
-      const movedCard = targetList.cards![event.currentIndex];
-      movedCard.list = targetList._id!; // Update card's list ID
+      const movedCard = targetList.cards[event.currentIndex];
+      movedCard.list = targetList._id!; // Update the card's list reference
 
-      // Optional: persist changes to server
+      // Persist the change to backend
       this.cardService.updateCard(movedCard._id!, movedCard).subscribe({
         next: () => console.log('Card updated after moving between lists'),
         error: (err) => console.error('Failed to update card', err),
