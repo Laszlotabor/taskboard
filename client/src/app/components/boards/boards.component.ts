@@ -6,11 +6,19 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardService } from '../../services/card-service.service';
 import { CardComponent } from '../card/card.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
+
+
 
 @Component({
   selector: 'app-board-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardComponent],
+  imports: [CommonModule, FormsModule, CardComponent, DragDropModule],
   templateUrl: './boards.component.html',
   styleUrls: ['./boards.component.css'],
 })
@@ -33,6 +41,11 @@ export class BoardListComponent {
     private cardService: CardService
   ) {
     this.fetchBoards();
+  }
+  get connectedListIds(): string[] {
+    return this.lists
+      .map((l) => l._id!)
+      .filter((id): id is string => typeof id === 'string');
   }
 
   fetchBoards(): void {
@@ -182,6 +195,38 @@ export class BoardListComponent {
   onCardDeleted(cardId: string, list: List): void {
     if (list.cards) {
       list.cards = list.cards.filter((card: Card) => card._id !== cardId);
+    }
+  }
+  dropCard(event: CdkDragDrop<Card[]>, targetList: List): void {
+    const previousListId = event.previousContainer.id;
+    const currentListId = event.container.id;
+
+    if (event.previousContainer === event.container) {
+      // Move within same list
+      moveItemInArray(
+        targetList.cards!,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      const sourceList = this.lists.find((l) => l._id === previousListId);
+      if (!sourceList) return;
+
+      transferArrayItem(
+        sourceList.cards!,
+        targetList.cards!,
+        event.previousIndex,
+        event.currentIndex
+      );
+
+      const movedCard = targetList.cards![event.currentIndex];
+      movedCard.list = targetList._id!; // Update card's list ID
+
+      // Optional: persist changes to server
+      this.cardService.updateCard(movedCard._id!, movedCard).subscribe({
+        next: () => console.log('Card updated after moving between lists'),
+        error: (err) => console.error('Failed to update card', err),
+      });
     }
   }
 }

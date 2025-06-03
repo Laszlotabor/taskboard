@@ -37,7 +37,7 @@
       </div>
   
       <!-- Horizontal Lists Display -->
-      <div class="d-flex flex-row flex-nowrap overflow-auto gap-3 pb-3">
+      <div class="d-flex flex-row flex-nowrap overflow-auto gap-3 pb-3" cdkDropListGroup>
         <div *ngFor="let list of lists" class="card p-2" style="min-width: 250px;">
           <div class="card-body d-flex flex-column">
             <!-- List Title or Editing -->
@@ -53,11 +53,26 @@
   
             <!-- Render Cards -->
 <!-- Inside each list card-body -->
-<app-card
-  *ngFor="let card of list.cards"
-  [card]="card"
-  (cardDeleted)="onCardDeleted($event, list)">
-</app-card>
+<div
+  cdkDropList
+  [id]="list._id!"
+  [cdkDropListData]="list.cards"
+  [cdkDropListConnectedTo]="connectedListIds"
+  class="card-list"
+  (cdkDropListDropped)="dropCard($event, list)"
+>
+
+>
+  <app-card
+    *ngFor="let card of list.cards"
+    cdkDrag
+    [card]="card"
+    (cardDeleted)="onCardDeleted($event, list)"
+  ></app-card>
+</div>
+
+
+
 
   
 
