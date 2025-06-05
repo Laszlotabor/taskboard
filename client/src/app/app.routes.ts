@@ -5,25 +5,29 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { BoardListComponent } from './components/boards/boards.component';
 import { CreateBoardComponent } from './components/createboards/createboards.component';
 import { HomeComponent } from './components/home/home.component';
+import { AuthGuard } from './auth.guard';
+
 
 
 
 
 export const routes: Routes = [
+  // Public routes
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'navbar', component: NavbarComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'boards', component: BoardListComponent },
+  { path: 'navbar', component: NavbarComponent }, 
 
-  { path: 'create-board', component: CreateBoardComponent },
+  // Protected routes
+  { path: 'boards', component: BoardListComponent, canActivate: [AuthGuard] },
+  {
+    path: 'create-board',
+    component: CreateBoardComponent,
+    canActivate: [AuthGuard],
+  },
 
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-
-  // Redirect empty path to login
+  // Redirects
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-
-  // Wildcard route to catch unknown URLs and redirect to login
   { path: '**', redirectTo: 'login' },
 ];
 

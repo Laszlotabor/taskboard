@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 
+const authMiddleware = require("../middleware/authMiddleware");
+
+
 const boardSchema = new mongoose.Schema(
   {
     user: {
@@ -15,8 +18,15 @@ const boardSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
   },
   { timestamps: true }
 );
+
 
 module.exports = mongoose.model("board", boardSchema);

@@ -35,6 +35,10 @@ export class BoardListComponent {
 
   cards: { [listId: string]: Card[] } = {}; // Store cards per list
 
+  inviteEmail: string = '';
+  inviteMessage: string | null = null;
+  inviteError: string | null = null;
+
   constructor(
     private boardsService: BoardsService,
     private listService: ListService,
@@ -290,5 +294,27 @@ export class BoardListComponent {
         error: (err) => console.error('Failed to update card', err),
       });
     }
+  }
+
+  inviteUser(): void {
+    if (!this.inviteEmail || !this.selectedBoardId) {
+      this.inviteError = 'Please enter a valid email.';
+      return;
+    }
+
+    this.boardsService
+      .inviteUserToBoard(this.selectedBoardId, this.inviteEmail)
+      .subscribe({
+        next: (res) => {
+          this.inviteMessage = 'User invited successfully!';
+          this.inviteError = null;
+          this.inviteEmail = '';
+        },
+        error: (err) => {
+          console.error('Invitation failed', err);
+          this.inviteError = err?.error?.message || 'Failed to invite user.';
+          this.inviteMessage = null;
+        },
+      });
   }
 }

@@ -57,4 +57,12 @@ export class BoardsService {
       headers: this.getAuthHeaders(),
     });
   }
+
+  inviteUserToBoard(boardId: string, email: string): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/${boardId}/invite`,
+      { email },
+      { headers: this.getAuthHeaders() }
+    );
+  }
 }

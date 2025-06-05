@@ -6,13 +6,13 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router,RouterLink} from '@angular/router';
 import { AuthService } from '../../services/auth-service.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html', // <-- Use external template here
 })
 export class RegisterComponent {

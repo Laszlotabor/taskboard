@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <!-- Board Selection View -->
     <div *ngIf="!selectedBoardId">
-      <h2 class="mb-4">Your Boards</h2>
+      <h1 class="your-boards">Your Boards</h1>
   
       <div *ngIf="loading" class="text-center">
         <div class="spinner-border text-primary" role="status"></div>
@@ -31,7 +31,6 @@
                   🗑 Delete
                 </button>
               </div>
-              
             </div>
           </div>
         </div>
@@ -40,9 +39,25 @@
   
     <!-- Selected Board View -->
     <div *ngIf="selectedBoardId">
-      <!-- Board header -->
-      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <!-- Left: Board title -->
         <h2 class="board-title mb-2 mb-md-0">{{ getSelectedBoard()?.title }}</h2>
+  
+        <!-- Middle: Invite user input -->
+        <div class="d-flex align-items-center gap-2 flex-grow-1" style="max-width: 350px; min-width: 220px;">
+          <input
+            type="email"
+            class="form-control form-control-sm"
+            [(ngModel)]="inviteEmail"
+            placeholder="Invite user by email"
+            style="flex-grow: 1; border-radius: 0.375rem;"
+          />
+          <button class="btn btn-warning btn-sm px-3" (click)="inviteUser()">
+            Invite
+          </button>
+        </div>
+  
+        <!-- Right: Action buttons -->
         <div class="d-flex gap-2">
           <button class="btn btn-success btn-sm" (click)="createList(selectedBoardId)">
             + Add List
@@ -53,13 +68,20 @@
         </div>
       </div>
   
+      <div *ngIf="inviteMessage" class="text-success mb-2" style="font-size: 0.9rem;">
+        {{ inviteMessage }}
+      </div>
+      <div *ngIf="inviteError" class="text-danger mb-2" style="font-size: 0.9rem;">
+        {{ inviteError }}
+      </div>
+  
       <!-- Horizontal Lists Display -->
       <div class="d-flex flex-row flex-nowrap overflow-auto gap-3 pb-3" cdkDropListGroup>
         <div *ngFor="let list of lists" class="card p-2" style="min-width: 250px;">
           <div class="card-body d-flex flex-column">
             <!-- List Title or Editing -->
             <div *ngIf="!editingListId || editingListId !== list._id" (click)="startEditing(list)">
-              <h5 class="card-title" style="background-color: pink;">{{ list.title }}</h5>
+              <h5 class="card-title">{{ list.title }}</h5>
             </div>
   
             <div *ngIf="editingListId === list._id">
