@@ -15,7 +15,15 @@
 }
 .your-boards{
     font-size: 3rem;
-    
+}
+.invite-message{
+    font-size: 2rem;
+    color: greenyellow;
+}
+
+.invite-error {
+    font-size: 2rem;
+        color: rgb(245, 181, 44);
 }
 
 .row .card:hover {
@@ -41,6 +49,45 @@
     font-size: 2.5rem;
     font-weight: bold;
     color: #ffffff;
+}
+.board-description{
+    font-size: 1rem;
+    margin-top: 15px;
+}
+/* List Header (Title + Toggle Icon) */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #c5cae9;
+    color: #1a237e;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.list-header:hover {
+    background-color: #b0bec5;
+}
+
+/* Sandwich Icon Button */
+.list-header button {
+    background: none;
+    border: none;
+    color: #1a237e;
+    font-size: 1.2rem;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.list-header button:hover {
+    transform: scale(1.2);
+    color: #0d47a1;
 }
 
 /* Buttons */
@@ -120,4 +167,35 @@ input.form-control {
     border: 2px dashed #90a4ae;
     border-radius: 6px;
     background-color: #f1f8e9;
+}
+
+/* Dropdown Styling */
+.dropdown-menu {
+    background-color: white;
+    border-radius: 8px;
+    min-width: 180px;
+    border: 1px solid #ccc;
+    transition: all 0.25s ease-in-out;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Dropdown Items */
+.dropdown-item {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: background 0.2s ease;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
 }

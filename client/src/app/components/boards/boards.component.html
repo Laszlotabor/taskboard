@@ -37,14 +37,16 @@
       </div>
     </div>
   
-    <!-- Selected Board View -->
-    <div *ngIf="selectedBoardId">
-      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <!-- Left: Board title -->
-        <h2 class="board-title mb-2 mb-md-0">{{ getSelectedBoard()?.title }}</h2>
+   <!-- Selected Board View -->
+<div *ngIf="selectedBoardId">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+      <!-- Left: Board title -->
+      <h2 class="board-title mb-2 mb-md-0">{{ getSelectedBoard()?.title }}</h2>
+      <h4 class="board-description   ">{{ getSelectedBoard()?.description }}</h4>
   
-        <!-- Middle: Invite user input -->
-        <div class="d-flex align-items-center gap-2 flex-grow-1" style="max-width: 350px; min-width: 220px;">
+      <!-- Middle: Invite user input and message -->
+      <div class="d-flex align-items-center gap-2 flex-grow-1 flex-wrap" style="min-width: 220px;">
+        <div class="d-flex align-items-center gap-2" style="max-width: 350px; flex-grow: 1;">
           <input
             type="email"
             class="form-control form-control-sm"
@@ -57,23 +59,25 @@
           </button>
         </div>
   
-        <!-- Right: Action buttons -->
-        <div class="d-flex gap-2">
-          <button class="btn btn-success btn-sm" (click)="createList(selectedBoardId)">
-            + Add List
-          </button>
-          <button class="btn btn-warning btn-sm" (click)="selectedBoardId = ''">
-            ← Back to Boards
-          </button>
+        <!-- Invite Message -->
+        <div *ngIf="inviteMessage" class="invite-message" style="white-space: nowrap;">
+          {{ inviteMessage }}
+        </div>
+        <div *ngIf="inviteError" class="invite-error" style="white-space: nowrap;">
+          {{ inviteError }}
         </div>
       </div>
   
-      <div *ngIf="inviteMessage" class="text-success mb-2" style="font-size: 0.9rem;">
-        {{ inviteMessage }}
+      <!-- Right: Action buttons -->
+      <div class="d-flex gap-2">
+        <button class="btn btn-success btn-sm" (click)="createList(selectedBoardId)">
+          + Add List
+        </button>
+        <button class="btn btn-warning btn-sm" (click)="selectedBoardId = ''">
+          ← Back to Boards
+        </button>
       </div>
-      <div *ngIf="inviteError" class="text-danger mb-2" style="font-size: 0.9rem;">
-        {{ inviteError }}
-      </div>
+    </div>
   
       <!-- Horizontal Lists Display -->
       <div class="d-flex flex-row flex-nowrap overflow-auto gap-3 pb-3" cdkDropListGroup>

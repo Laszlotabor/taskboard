@@ -103,7 +103,7 @@ exports.inviteUserToBoard = async (req, res) => {
 
     const userToInvite = await User.findOne({ email });
     if (!userToInvite) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found!!!" });
     }
 
     if (board.members.includes(userToInvite._id)) {

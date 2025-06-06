@@ -13,8 +13,6 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 
-
-
 @Component({
   selector: 'app-board-list',
   standalone: true,
@@ -27,17 +25,18 @@ export class BoardListComponent {
   loading = false;
   error: string | null = null;
 
-  selectedBoardId: string = '';
-  selectedListId: string = '';
+  selectedBoardId = '';
+  selectedListId = '';
   lists: List[] = [];
 
   editingListId: string | null = null;
 
-  cards: { [listId: string]: Card[] } = {}; // Store cards per list
-
-  inviteEmail: string = '';
+  inviteEmail = '';
   inviteMessage: string | null = null;
   inviteError: string | null = null;
+
+  // Track the ID of the list with an open menu
+  listMenuOpenId: string | null = null;
 
   constructor(
     private boardsService: BoardsService,
@@ -46,10 +45,9 @@ export class BoardListComponent {
   ) {
     this.fetchBoards();
   }
+
   get connectedListIds(): string[] {
-    return this.lists
-      .map((l) => l._id!)
-      .filter((id): id is string => typeof id === 'string');
+    return this.lists.map((l) => l._id!).filter((id) => !!id);
   }
 
   fetchBoards(): void {
@@ -71,6 +69,7 @@ export class BoardListComponent {
     this.selectedBoardId = boardId;
     this.selectedListId = '';
     this.fetchLists(boardId);
+    this.listMenuOpenId = null; // Close any open menu on board change
   }
 
   getSelectedBoard(): Board | undefined {
@@ -85,11 +84,9 @@ export class BoardListComponent {
         next: () => {
           this.boards = this.boards.filter((b) => b._id !== boardId);
 
-          // Reset selected board if it was deleted
           if (this.selectedBoardId === boardId) {
             this.selectedBoardId = '';
             this.lists = [];
-            this.cards = {};
           }
         },
         error: (err) => {
@@ -99,6 +96,7 @@ export class BoardListComponent {
       });
     }
   }
+
   updateBoard(boardId: string): void {
     const board = this.boards.find((b) => b._id === boardId);
     if (!board) return;
@@ -116,16 +114,10 @@ export class BoardListComponent {
       })
       .subscribe({
         next: (updatedBoard) => {
-          // Update the board in local list
           const index = this.boards.findIndex((b) => b._id === boardId);
-          if (index !== -1) {
-            this.boards[index] = updatedBoard;
-          }
+          if (index !== -1) this.boards[index] = updatedBoard;
 
-          // Update selected board title if needed
-          if (this.selectedBoardId === boardId) {
-            this.selectBoard(boardId); // Re-fetch lists/cards if needed
-          }
+          if (this.selectedBoardId === boardId) this.selectBoard(boardId);
         },
         error: (err) => {
           console.error('Failed to update board', err);
@@ -163,7 +155,6 @@ export class BoardListComponent {
     this.listService.createList(newList).subscribe({
       next: (createdList) => {
         this.lists.push(createdList);
-        this.cards[createdList._id!] = [];
       },
       error: (err) => {
         console.error('Failed to create list', err);
@@ -173,6 +164,7 @@ export class BoardListComponent {
 
   startEditing(list: List): void {
     this.editingListId = list._id ?? null;
+    this.listMenuOpenId = null; // close menu when editing starts
   }
 
   cancelEditing(): void {
@@ -195,7 +187,6 @@ export class BoardListComponent {
     this.listService.deleteList(listId).subscribe({
       next: () => {
         this.lists = this.lists.filter((list) => list._id !== listId);
-        delete this.cards[listId];
       },
       error: (err) => {
         console.error('Failed to delete list', err);
@@ -203,19 +194,6 @@ export class BoardListComponent {
     });
   }
 
-  /** 💡 Load cards for a specific list */
-  fetchCards(listId: string): void {
-    this.cardService.getCards(listId).subscribe({
-      next: (cards) => {
-        this.cards[listId] = cards;
-      },
-      error: (err) => {
-        console.error('Failed to load cards for list ' + listId, err);
-      },
-    });
-  }
-
-  /** ➕ Add a new card to a list */
   addCard(listId: string): void {
     const newCard = {
       title: 'New Card',
@@ -229,7 +207,7 @@ export class BoardListComponent {
         const targetList = this.lists.find((list) => list._id === listId);
         if (targetList) {
           if (!targetList.cards) targetList.cards = [];
-          targetList.cards.push(createdCard); // ✅ Add card to the correct list
+          targetList.cards.push(createdCard);
         }
       },
       error: (err) => {
@@ -248,34 +226,34 @@ export class BoardListComponent {
   deleteCard(listId: string, cardId: string): void {
     this.cardService.deleteCard(cardId).subscribe({
       next: () => {
-        this.cards[listId] = this.cards[listId].filter((c) => c._id !== cardId);
+        const targetList = this.lists.find((list) => list._id === listId);
+        if (targetList && targetList.cards) {
+          targetList.cards = targetList.cards.filter((c: { _id: string; }) => c._id !== cardId);
+        }
       },
       error: (err) => console.error('Failed to delete card', err),
     });
   }
+
   onCardDeleted(cardId: string, list: List): void {
     if (list.cards) {
       list.cards = list.cards.filter((card: Card) => card._id !== cardId);
     }
   }
-  dropCard(event: CdkDragDrop<Card[]>, targetList: List): void {
-    const previousListId = event.previousContainer.id;
-    const currentListId = event.container.id;
 
-    // Ensure target list has a cards array
-    if (!targetList.cards) {
-      targetList.cards = [];
-    }
+  dropCard(event: CdkDragDrop<Card[]>, targetList: List): void {
+    if (!targetList.cards) targetList.cards = [];
 
     if (event.previousContainer === event.container) {
-      // Move card inside the same list
       moveItemInArray(
         targetList.cards,
         event.previousIndex,
         event.currentIndex
       );
     } else {
-      const sourceList = this.lists.find((l) => l._id === previousListId);
+      const sourceList = this.lists.find(
+        (l) => l._id === event.previousContainer.id
+      );
       if (!sourceList || !sourceList.cards) return;
 
       transferArrayItem(
@@ -286,9 +264,8 @@ export class BoardListComponent {
       );
 
       const movedCard = targetList.cards[event.currentIndex];
-      movedCard.list = targetList._id!; // Update the card's list reference
+      movedCard.list = targetList._id!;
 
-      // Persist the change to backend
       this.cardService.updateCard(movedCard._id!, movedCard).subscribe({
         next: () => console.log('Card updated after moving between lists'),
         error: (err) => console.error('Failed to update card', err),
@@ -298,23 +275,27 @@ export class BoardListComponent {
 
   inviteUser(): void {
     if (!this.inviteEmail || !this.selectedBoardId) {
-      this.inviteError = 'Please enter a valid email.';
+      this.inviteError = 'Please enter a valid email!!!';
       return;
     }
 
     this.boardsService
       .inviteUserToBoard(this.selectedBoardId, this.inviteEmail)
       .subscribe({
-        next: (res) => {
-          this.inviteMessage = 'User invited successfully!';
+        next: () => {
+          this.inviteMessage = 'User invited successfully!!!';
           this.inviteError = null;
           this.inviteEmail = '';
         },
         error: (err) => {
-          console.error('Invitation failed', err);
-          this.inviteError = err?.error?.message || 'Failed to invite user.';
+          console.error('Invitation failed!!!', err);
+          this.inviteError = err?.error?.message || 'Failed to invite user!!!';
           this.inviteMessage = null;
         },
       });
+  }
+
+  toggleListMenu(listId: string): void {
+    this.listMenuOpenId = this.listMenuOpenId === listId ? null : listId;
   }
 }
