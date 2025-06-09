@@ -19,6 +19,28 @@
             class="form-control"
             placeholder="Add a description"
           ></textarea>
+  
+          <!-- Image Preview -->
+          <div *ngIf="editedImageUrl" class="mt-3 text-center">
+            <img
+              [src]="editedImageUrl"
+              alt="Card image"
+              class="img-fluid rounded"
+              style="max-height: 200px;"
+            />
+          </div>
+  
+          <!-- Upload Image Button -->
+          <label class="btn btn-outline-primary btn-sm mt-3" for="fileInput">
+            📷 Upload Image
+          </label>
+          <input
+            id="fileInput"
+            type="file"
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            style="display: none"
+          />
         </div>
         <div class="modal-footer">
           <button class="btn btn-danger me-auto" (click)="deleteCard()">Delete</button>

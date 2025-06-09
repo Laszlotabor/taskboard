@@ -17,7 +17,6 @@ exports.getCards = async (req, res) => {
 // @access  Private
 exports.createCard = async (req, res) => {
   const { list, title, description, position } = req.body;
-
   if (!list || !title || position === undefined) {
     return res
       .status(400)
@@ -25,13 +24,16 @@ exports.createCard = async (req, res) => {
   }
 
   try {
-    const newCard = new Card({ list, title, description, position });
+    const image = req.file ? req.file.path : null; // multer adds file info to req.file
+
+    const newCard = new Card({ list, title, description, position, image });
     const savedCard = await newCard.save();
     res.status(201).json(savedCard);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // @desc    Update a card
 // @route   PUT /api/cards/:id
@@ -48,12 +50,17 @@ exports.updateCard = async (req, res) => {
     card.position = position ?? card.position;
     card.list = list ?? card.list;
 
+    if (req.file) {
+      card.image = req.file.path; // update image if new file uploaded
+    }
+
     const updatedCard = await card.save();
     res.json(updatedCard);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // @desc    Delete a card
 // @route   DELETE /api/cards/:id

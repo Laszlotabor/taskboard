@@ -4,4 +4,5 @@ export interface Card {
   description?: string;
   position: number;
   list: string;
+  imageUrl?: string; // Add this property
 }

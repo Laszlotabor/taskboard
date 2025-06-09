@@ -1,24 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const protect = require("../middleware/authMiddleware");
-const { moveCard } = require("../controllers/cardController");
-const authMiddleware = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadMiddleware"); // multer upload middleware
+
 const {
   getCards,
   createCard,
   updateCard,
   deleteCard,
+  moveCard,
 } = require("../controllers/cardController");
 
 router.use(protect);
 
-router.put("/move/:cardId", authMiddleware, moveCard);
-
+router.put("/move/:cardId", moveCard);
 
 router.route("/:listId").get(getCards);
 
-router.route("/").post(createCard);
+router.route("/").post(upload.single("image"), createCard);
 
-router.route("/:id").put(updateCard).delete(deleteCard);
+router.route("/:id").put(upload.single("image"), updateCard).delete(deleteCard);
 
 module.exports = router;

@@ -20,6 +20,10 @@ const cardSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    image: {
+      type: String, // URL or file path to the uploaded image
+      default: null,
+    },
   },
   { timestamps: true }
 );

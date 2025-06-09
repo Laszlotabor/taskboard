@@ -42,4 +42,10 @@ export class CardService {
       newPosition,
     });
   }
+  uploadImage(cardId: string, imageFile: File): Observable<Card> {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    return this.http.put<Card>(`${this.baseUrl}/${cardId}`, formData);
+  }
 }

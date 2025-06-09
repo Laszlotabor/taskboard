@@ -1,4 +1,6 @@
 const List = require("../models/list");
+const Board = require("../models/board"); // ✅ Import the Board model
+
 
 // @desc    Get all lists for a board
 // @route   GET /api/lists/:boardId
