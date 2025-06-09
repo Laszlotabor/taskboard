@@ -1,0 +1,10 @@
+/* Centering container and background */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 4rem 1rem;
+    background: #f5f7fa;
+    min-height: 100vh;
+}
+

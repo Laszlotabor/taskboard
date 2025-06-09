@@ -1,7 +1,14 @@
 <div class="container-fluid">
+    
     <!-- Board Selection View -->
     <div *ngIf="!selectedBoardId">
-      <h1 class="your-boards">Your Boards</h1>
+      
+   <div class="welcome-message" *ngIf="user">
+
+        <h2 >👋 Hello, {{ user.name }}!!! These are your current boards:</h2>
+        <button class="btn btn-sm add-board" routerLink="/create-board" >add board</button>
+      </div>
+      
   
       <div *ngIf="loading" class="text-center">
         <div class="spinner-border text-primary" role="status"></div>

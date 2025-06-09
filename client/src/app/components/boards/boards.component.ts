@@ -12,15 +12,21 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { AuthService } from '../../services/auth-service.service';
+import { User } from '../../models/user';
+import { RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-board-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardComponent, DragDropModule],
+  imports: [CommonModule, FormsModule, CardComponent, DragDropModule, RouterLink
+],
   templateUrl: './boards.component.html',
   styleUrls: ['./boards.component.css'],
 })
 export class BoardListComponent {
+  user: User | null = null;
   boards: Board[] = [];
   loading = false;
   error: string | null = null;
@@ -38,11 +44,17 @@ export class BoardListComponent {
   // Track the ID of the list with an open menu
   listMenuOpenId: string | null = null;
 
+  
+
   constructor(
     private boardsService: BoardsService,
     private listService: ListService,
-    private cardService: CardService
+    private cardService: CardService,
+    private authService: AuthService // <-- Inject here
   ) {
+    console.log('User from AuthService:', this.user);
+
+    this.user = this.authService.getUser();
     this.fetchBoards();
   }
 
@@ -228,7 +240,9 @@ export class BoardListComponent {
       next: () => {
         const targetList = this.lists.find((list) => list._id === listId);
         if (targetList && targetList.cards) {
-          targetList.cards = targetList.cards.filter((c: { _id: string; }) => c._id !== cardId);
+          targetList.cards = targetList.cards.filter(
+            (c: { _id: string }) => c._id !== cardId
+          );
         }
       },
       error: (err) => console.error('Failed to delete card', err),

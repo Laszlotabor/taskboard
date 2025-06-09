@@ -42,4 +42,7 @@ export class CreateBoardComponent {
         },
       });
   }
+  backToBoards() {
+    this.router.navigate(['/boards']);
+   };
 }

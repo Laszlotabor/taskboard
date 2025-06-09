@@ -1,21 +1,124 @@
+/* Container centers the card and adds spacing */
 .create-board-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    background-color: #f8f9fa;
+    align-items: flex-start;
+    padding: 4rem 1rem;
+    background: #f5f7fa;
+    min-height: 100vh;
 }
 
+/* Card styling */
 .create-board-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 2rem;
-    max-width: 500px;
+    background: #ffffff;
     width: 100%;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    max-width: 420px;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
 }
 
-.create-board-card:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+/* Heading */
+.create-board-card h2 {
+    font-size: 1.75rem;
+    color: #333;
+}
+
+/* Form groups */
+.create-board-card .mb-3 {
+    margin-bottom: 1rem;
+}
+
+/* Labels */
+.create-board-card .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #444;
+}
+
+/* Required asterisk */
+.create-board-card .form-label .text-danger {
+    color: #e55353;
+}
+
+/* Inputs and textarea */
+.create-board-card .form-control {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccd0d5;
+    border-radius: 6px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.create-board-card .form-control:focus {
+    outline: none;
+    border-color: #4d90fe;
+    box-shadow: 0 0 0 3px rgba(77, 144, 254, 0.2);
+}
+
+/* Validation error text */
+.create-board-card .text-danger {
+    font-size: 0.875rem;
+}
+
+/* Alert */
+.create-board-card .alert {
+    margin: 1rem 0;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    background: #fdecea;
+    color: #b71c1c;
+    border: 1px solid #f5c6cb;
+}
+
+/* Button container (d-grid) */
+.create-board-card .d-grid {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+/* Primary button */
+.create-board-card .btn-primary {
+    background-color: #4d90fe;
+    border: none;
+    color: #fff;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.create-board-card .btn-primary:hover:not(:disabled) {
+    background-color: #357ae8;
+}
+
+.create-board-card .btn-primary:disabled {
+    background-color: #a6c8ff;
+    cursor: not-allowed;
+}
+
+/* Secondary/cancel button */
+.create-board-card .btn.mt-1 {
+    background-color: #e0e0e0;
+    border: none;
+    color: #333;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.create-board-card .btn.mt-1:hover {
+    background-color: #cfcfcf;
+}
+
+/* Utility shadow class (if you want to override) */
+.shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }

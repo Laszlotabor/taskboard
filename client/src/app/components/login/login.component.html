@@ -1,5 +1,7 @@
-<div class="container mt-5" style="max-width: 400px;">
-    <h2 class="mb-4 text-center">Login</h2>
+<div class="container mt-5 pt-5" >
+
+  <div class="login-card">
+    <h2 class="m-4  text-center">Login</h2>
   
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="mb-3">
@@ -45,5 +47,6 @@
       Don't have an account?
       <a routerLink="/register">Register here</a>
     </p>
+   </div>
   </div>
   
