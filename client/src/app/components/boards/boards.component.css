@@ -31,19 +31,9 @@
     transform: translateY(-4px);
 }
 
-.card-title {
-    padding: 5px;
-    font-weight: 600;
-    font-size: 2rem;
-    color: #d3dce9;
-    background-color: #1976d2;
-    border-radius: 10px;
-}
 
-.card-text {
-    color: #455a64;
-    font-size: 0.95rem;
-}
+
+
 
 /* Board Header */
 .board-title {
@@ -185,6 +175,37 @@ input.form-control {
     margin-bottom: 10px;
     font-size: 2rem;
     background-color: #0f62b6;
+}
+.div-title-box {
+    background: linear-gradient(135deg, #5c6bc0, #7986cb);
+    border-radius: 10px;
+    width: 100%;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+}
+.div-title-box .dropdown button {
+    font-size: 1.6rem;
+    /* Make icon bigger */
+    border: none !important;
+    /* Remove border */
+    background-color: transparent !important;
+    /* Remove background */
+    padding-top: 6px;
+    /* Remove padding */
+    line-height: 1;
+    /* Align icon nicely */
+    color: white;
+    /* Keep icon visible */
+    cursor: pointer;
+    width: auto;
+    /* Avoid fixed width */
+    height: auto;
+    /* Avoid fixed height */
+    box-shadow: none !important;
+    /* Remove any shadow */
 }
 
 

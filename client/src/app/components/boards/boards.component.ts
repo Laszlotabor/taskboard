@@ -20,8 +20,13 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-board-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardComponent, DragDropModule, RouterLink
-],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CardComponent,
+    DragDropModule,
+    RouterLink,
+  ],
   templateUrl: './boards.component.html',
   styleUrls: ['./boards.component.css'],
 })
@@ -43,8 +48,6 @@ export class BoardListComponent {
 
   // Track the ID of the list with an open menu
   listMenuOpenId: string | null = null;
-
-  
 
   constructor(
     private boardsService: BoardsService,
@@ -311,5 +314,10 @@ export class BoardListComponent {
 
   toggleListMenu(listId: string): void {
     this.listMenuOpenId = this.listMenuOpenId === listId ? null : listId;
+  }
+
+  uploadImage(list: any) {
+    console.log('Upload image for', list.title);
+    // Your file upload logic here
   }
 }

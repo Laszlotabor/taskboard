@@ -77,7 +77,7 @@
   
       <!-- Right: Action buttons -->
       <div class="d-flex gap-2">
-        <button class="btn btn-success btn-sm" (click)="createList(selectedBoardId)">
+        <button class="btn btn-success btn-sm" (click)="createList(selectedBoardId)">1
           + Add List
         </button>
         <button class="btn btn-warning btn-sm" (click)="selectedBoardId = ''">
@@ -90,10 +90,26 @@
       <div class="d-flex flex-row flex-nowrap overflow-auto gap-3 pb-3" cdkDropListGroup>
         <div *ngFor="let list of lists" class="card p-2" style="min-width: 250px;">
           <div class="card-body d-flex flex-column">
-            <!-- List Title or Editing -->
-            <div *ngIf="!editingListId || editingListId !== list._id" (click)="startEditing(list)">
-              <h5 class="card-title">{{ list.title }}</h5>
-            </div>
+            <!-- List Title with Dropdown Actions -->
+            <div *ngIf="!editingListId || editingListId !== list._id" class="mb-3">
+                <div class="div-title-box d-flex justify-content-between align-items-center px-3 py-2">
+                  <h5 class="mb-0 text-white flex-grow-1" style="cursor: pointer;" (click)="startEditing(list)">
+                    {{ list.title }}
+                  </h5>
+                  <div class="dropdown ms-2">
+                    <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      ⋮
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li><a class="dropdown-item" (click)="uploadImage(list)">📷 Upload Image</a></li>
+                      <li><a class="dropdown-item">🗂 Archive</a></li>
+                      <li><a class="dropdown-item" (click)="startEditing(list)">✏️ Rename</a></li>
+                      <li><a class="dropdown-item text-danger" (click)="deleteList(list._id!)">🗑 Delete</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
   
             <div *ngIf="editingListId === list._id">
               <input [(ngModel)]="list.title" class="form-control mb-2" (keyup.enter)="saveList(list)" />
