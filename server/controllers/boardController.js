@@ -5,7 +5,7 @@ const User = require("../models/user");
 exports.getBoards = async (req, res) => {
   try {
     const boards = await Board.find({
-      $or: [{ user: req.user._id }, { members: req.user._id }],
+      $or: [{ user: req.user._id }, { "members.user": req.user._id }],
     });
     res.json(boards);
   } catch (error) {
@@ -37,7 +37,7 @@ exports.getBoardById = async (req, res) => {
   try {
     const board = await Board.findOne({
       _id: req.params.id,
-      $or: [{ user: req.user._id }, { members: req.user._id }],
+      $or: [{ user: req.user._id }, { "members.user": req.user._id }],
     });
 
     if (!board) return res.status(404).json({ message: "Board not found" });
@@ -52,12 +52,14 @@ exports.updateBoard = async (req, res) => {
   const { title, description } = req.body;
 
   try {
-    const board = await Board.findOne({
-      _id: req.params.id,
-      user: req.user._id,
-    });
-
+    const board = await Board.findById(req.params.id);
     if (!board) return res.status(404).json({ message: "Board not found" });
+
+    if (!board.user.equals(req.user._id)) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to update this board" });
+    }
 
     board.title = title || board.title;
     board.description = description || board.description;
@@ -72,12 +74,14 @@ exports.updateBoard = async (req, res) => {
 // @desc    Delete a board (owner only)
 exports.deleteBoard = async (req, res) => {
   try {
-    const board = await Board.findOne({
-      _id: req.params.id,
-      user: req.user._id,
-    });
-
+    const board = await Board.findById(req.params.id);
     if (!board) return res.status(404).json({ message: "Board not found" });
+
+    if (!board.user.equals(req.user._id)) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this board" });
+    }
 
     await Board.deleteOne({ _id: board._id });
     res.json({ message: "Board removed" });
@@ -88,7 +92,6 @@ exports.deleteBoard = async (req, res) => {
 };
 
 // @desc    Invite a user to a board by email (owner only)
-// @route   POST /api/boards/:id/invite
 exports.inviteUserToBoard = async (req, res) => {
   const { email } = req.body;
   const boardId = req.params.id;
@@ -103,14 +106,18 @@ exports.inviteUserToBoard = async (req, res) => {
 
     const userToInvite = await User.findOne({ email });
     if (!userToInvite) {
-      return res.status(404).json({ message: "User not found!!!" });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    if (board.members.includes(userToInvite._id)) {
+    const alreadyMember = board.members.some(
+      (m) => m.user.toString() === userToInvite._id.toString()
+    );
+
+    if (alreadyMember) {
       return res.status(400).json({ message: "User already invited" });
     }
 
-    board.members.push(userToInvite._id);
+    board.members.push({ user: userToInvite._id });
     await board.save();
 
     res.status(200).json({ message: "User invited successfully" });

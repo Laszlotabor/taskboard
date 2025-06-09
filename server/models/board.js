@@ -20,8 +20,14 @@ const boardSchema = new mongoose.Schema(
     },
     members: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "user",
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        canDeleteLists: {
+          type: Boolean,
+          default: false,
+        },
       },
     ],
   },

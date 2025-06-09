@@ -54,7 +54,7 @@ exports.updateList = async (req, res) => {
   }
 };
 
-// @desc    Delete a list
+// @desc    Delete a list (owner or member with permission)
 // @route   DELETE /api/lists/:id
 // @access  Private
 exports.deleteList = async (req, res) => {
@@ -62,9 +62,30 @@ exports.deleteList = async (req, res) => {
     const list = await List.findById(req.params.id);
     if (!list) return res.status(404).json({ message: "List not found" });
 
-    await List.deleteOne({ _id: list._id });
-    res.json({ message: "List removed" });
+    const board = await Board.findById(list.board);
+    if (!board) return res.status(404).json({ message: "Board not found" });
+
+    const userId = req.user._id;
+
+    // Owner can delete
+    if (board.user.equals(userId)) {
+      await list.deleteOne();
+      return res.status(200).json({ message: "List deleted (owner)" });
+    }
+
+    // Check if user is a member with delete permission
+    const member = board.members.find((m) =>
+      m.user?.equals ? m.user.equals(userId) : false
+    );
+
+    if (member?.canDeleteLists) {
+      await list.deleteOne();
+      return res.status(200).json({ message: "List deleted (member with permission)" });
+    }
+
+    return res.status(403).json({ message: "Not authorized to delete this list" });
   } catch (error) {
+    console.error("Delete list error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

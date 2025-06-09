@@ -54,6 +54,7 @@ export class BoardListComponent {
     private listService: ListService,
     private cardService: CardService,
     private authService: AuthService // <-- Inject here
+    
   ) {
     console.log('User from AuthService:', this.user);
 
