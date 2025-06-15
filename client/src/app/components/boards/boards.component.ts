@@ -56,9 +56,10 @@ export class BoardListComponent {
     private authService: AuthService // <-- Inject here
     
   ) {
-    console.log('User from AuthService:', this.user);
+    
 
     this.user = this.authService.getUser();
+    console.log('User from AuthService:', this.user);
     this.fetchBoards();
   }
 
