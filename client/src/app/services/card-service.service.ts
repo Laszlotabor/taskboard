@@ -11,9 +11,8 @@ export class CardService {
 
   constructor(private http: HttpClient) {}
 
-  /** 🔹 Get all cards in a list */
   getCards(listId: string): Observable<Card[]> {
-    return this.http.get<Card[]>(`${this.baseUrl}/${listId}`);
+    return this.http.get<Card[]>(`${this.baseUrl}/list/${listId}`);
   }
 
   /** 🔹 Create a new card */
