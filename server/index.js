@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const path = require("path");
+
 console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
 const connectDB = require("./config/db");
@@ -17,19 +19,23 @@ connectDB();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/boards", boardRoutes);
 app.use("/api/lists", listRoutes);
 app.use("/api/cards", cardRoutes);
-const path = require("path");
 
 // Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Serve Angular frontend (built app)
+app.use(express.static(path.join(__dirname, "client/dist/taskboard-client")));
 
-app.get("/", (req, res) => {
-  res.send("API is running...");
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/dist/taskboard-client/index.html"));
 });
 
+// Server start
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
