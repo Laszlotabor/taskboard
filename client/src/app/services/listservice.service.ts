@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface List {
   cards: any;
-createdAt: string|number|Date;
+  createdAt: string | number | Date;
   _id?: string;
   board: string;
   title: string;
@@ -15,7 +16,7 @@ createdAt: string|number|Date;
   providedIn: 'root',
 })
 export class ListService {
-  private baseUrl = 'http://localhost:5000/api/lists';
+  private baseUrl = `${environment.apiUrl}/boards`;
 
   constructor(private http: HttpClient) {}
 

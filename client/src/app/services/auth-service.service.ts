@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
+import { environment } from '../../environments/environment'; // ✅ correct
+
+ // ✅ make sure this matches your build
 
 interface RegisterPayload {
   name: string;
@@ -24,34 +27,36 @@ interface LoginResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   constructor(private http: HttpClient, private router: Router) {}
 
   // --- Register a new user
   register(payload: RegisterPayload): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, payload);
+    return this.http.post(`${this.apiUrl}/register`, payload, {
+      withCredentials: true,
+    });
   }
 
   // --- Log in a user
   login(payload: LoginPayload): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, payload);
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, payload, {
+      withCredentials: true,
+    });
   }
 
-  // --- Save auth data (token + user)
+  // --- Save auth data
   setAuthData(token: string, user: User): void {
     this.saveToken(token);
     this.saveUser(user);
   }
 
-  // --- Logout
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
 
-  // --- Token
   saveToken(token: string): void {
     localStorage.setItem('token', token);
   }
@@ -60,7 +65,6 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  // --- User
   saveUser(user: User): void {
     localStorage.setItem('user', JSON.stringify(user));
   }
@@ -70,10 +74,7 @@ export class AuthService {
     return user ? JSON.parse(user) : null;
   }
 
-  // --- Auth check
   isAuthenticated(): boolean {
     return !!this.getToken();
   }
-
-
 }
